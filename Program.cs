@@ -20,7 +20,7 @@ namespace Blockchain
             prev_hash = _prev_hash;
             index = _index;
             data = _data;
-            //hash = sha; //we need to create this hash anew
+            hash = Program.byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes(data)));
             timestamp = DateTime.Now;
         }
     }
@@ -35,7 +35,7 @@ namespace Blockchain
     }
     class Program
     {
-        static String base_10_to_16(byte base10)
+        public static String base_10_to_16(byte base10)
         {
             String base_16 = "";
             char new_char;
@@ -56,29 +56,22 @@ namespace Blockchain
             }
             return (base_16);
         }
-        String byte_array_to_string(byte[] hash)
+        public static String byte_array_to_string(byte[] hash)
         {
             String newString = "";
             foreach (byte b in hash)
             {
-                newString += base_10_to_16(b);
+                newString = newString + base_10_to_16(b);
             }
             return (newString);
         }
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
             HashAlgorithm hash = SHA256.Create();
             int counter = 0;
-            foreach (byte b in hash.ComputeHash(Encoding.ASCII.GetBytes("Hello World!")))
-            {
-                counter++;
-                Console.WriteLine("Byte: {0}, Base_16 Rep: {1}", b, base_10_to_16(b));
-            }
-            Console.WriteLine("Numbers: {0}", counter);
+            String input = "Hello";
+            byte[] hash_bytes = hash.ComputeHash(Encoding.ASCII.GetBytes(input));
+            Console.WriteLine("Input: {0}, SHA-256 Representation: {1}", input, byte_array_to_string(hash_bytes));
         }
     }
 }
-
-
-//foreach is iterating through an iterable
