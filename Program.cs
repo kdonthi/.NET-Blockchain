@@ -6,33 +6,38 @@ using static System.Text.Encoding;
 
 namespace Blockchain
 {
-       
-    class Block
+    public class Block
     {
-        String      hash;
-        String      prev_hash;
-        int         index;
-        DateTime    timestamp;
-        String      data;
+        String              hash;
+        String              prev_hash;
+        int                 index;
+        DateTime            timestamp;
+        String              data;
+        public Block        nextBlock;
         HashAlgorithm sha = SHA256.Create();
-        public void init(String _hash, String _prev_hash, int _index, DateTime _timestamp, String _data)
+
+        public void init(String _prev_hash, int _index, String _data)
         {
             prev_hash = _prev_hash;
             index = _index;
             data = _data;
             hash = Program.byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes(data)));
             timestamp = DateTime.Now;
+            nextBlock = null;
         }
     }
+
     class Chain
     {
-        Block head;
-        Block last_block;
-        public void add_block()
+        static Block head = new Block();
+        public static Block lastblock = head;
+        public void add_block(String _prev_hash, int _index, String _data)
         {
-
+            lastblock.nextBlock = new Block();
+            lastblock = lastblock.nextBlock;
         }
     }
+
     class Program
     {
         public static String base_10_to_16(byte base10)
@@ -68,7 +73,6 @@ namespace Blockchain
         static void Main(string[] args)
         {
             HashAlgorithm hash = SHA256.Create();
-            int counter = 0;
             String input = "Hello";
             byte[] hash_bytes = hash.ComputeHash(Encoding.ASCII.GetBytes(input));
             Console.WriteLine("Input: {0}, SHA-256 Representation: {1}", input, byte_array_to_string(hash_bytes));
