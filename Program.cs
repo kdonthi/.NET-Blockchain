@@ -9,26 +9,55 @@ namespace Blockchain
 {
     public class Block
     {
-        public String       hash;
-        public String       prev_hash;
-        public int          index;
-        public DateTime     timestamp;
-        public String       data;
-        public Block        nextBlock;
+        public String               hash;
+        public String               hash_input;
+        public int                  hash_len;
+        public String               prev_hash;
+        public int                  index;
+        public DateTime             timestamp;
+        public String               data;
+        public Block                nextBlock;
+        static public String        stringOfZeros;
         HashAlgorithm sha = SHA256.Create();
 
-        public void init(String _prev_hash, int _index, String _data)
+        public void init(String _prev_hash, int _index, String _data, int difficulty)
         {
+            stringOfZeros = "";
+            for (int i = 0; i < difficulty; i++)
+                stringOfZeros += "0";
             prev_hash = _prev_hash;
             index = _index;
             data = _data;
-            hash = byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes($"Block at {index} index. Prev_hash: {prev_hash ?? ""} Data: {data}")));
+            hash_input = $"Block at {index} index. Prev_hash: {prev_hash ?? ""} Data: {data}";
+            hash = byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes(hash_input)));
+            hash_len = hash.Length;
+            while (ft_strcmp(hash.Substring(hash_len - 4), stringOfZeros) == 1)
+
             //Console.WriteLine("Index: {0}, Hash: {1}", _index, hash);
             //Console.WriteLine("Previous Hash: {0}, Current Hash: {1}", _prev_hash, hash);
             timestamp = DateTime.Now;
             nextBlock = null;
         }
 
+        public static int ft_strcmp(String s1, String s2)
+        {
+            int s1len = s1.Length;
+            int s2len = s2.Length;
+            if (s1len != s2len)
+                return (1);
+            int s1ptr = 0;
+            int s2ptr = 0;
+            while (s2len - s2ptr != 0 && s1len - s1ptr != 0)
+            {
+                if (s1[s1ptr++] != s2[s2ptr++])
+                    return (1);
+            }
+            if (s2len - s2ptr == 0 && s1len - s1ptr == 0)
+                return (0);
+            else
+                return (1);
+            
+        }
         public static String base_10_to_16(byte base10)
         {
             String base_16 = "";
@@ -89,6 +118,7 @@ namespace Blockchain
     {
         static void Main(string[] args)
         {
+            /*
             Chain blockchain = new Chain();
             blockchain.init_chain("First transaction");
             blockchain.add_block(blockchain.chaind[0].hash, 1, "Second transaction");
@@ -96,7 +126,8 @@ namespace Blockchain
             for (int i = 0; i < blockchain.chaind.Count; i++)
             {
                 Console.WriteLine("Index: {0}, Prev_Hash: {1}, Hash: {2}", blockchain.chaind[i].index, blockchain.chaind[i].prev_hash, blockchain.chaind[i].hash);
-            }
+            }*/
+            Console.WriteLine("{0},{1},{2}", Block.ft_strcmp("00", "00"), Block.ft_strcmp("ab", "a"), Block.ft_strcmp("ababa", "ababab"));
         }
     }
 }
