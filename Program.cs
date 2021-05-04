@@ -23,7 +23,8 @@ namespace Blockchain
             index = _index;
             data = _data;
             hash = byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes($"Block at {index} index. Prev_hash: {prev_hash ?? ""} Data: {data}")));
-            Console.WriteLine("Hash: {0}", hash);
+            //Console.WriteLine("Index: {0}, Hash: {1}", _index, hash);
+            //Console.WriteLine("Previous Hash: {0}, Current Hash: {1}", _prev_hash, hash);
             timestamp = DateTime.Now;
             nextBlock = null;
         }
@@ -74,11 +75,12 @@ namespace Blockchain
         public void add_block(String _prev_hash, int _index, String _data)
         {
             last_block.nextBlock = new Block();
-            last_block.nextBlock.init(_prev_hash, _index, _data);
             last_block = last_block.nextBlock;
+            last_block.init(_prev_hash, _index, _data);
             chaind.Add(last_block);
-            Console.WriteLine("Index: {0}, Index in List: {1}", _index, chaind[_index].index);
-            Console.WriteLine("Data: {0}, Data in List: {1}", _data, chaind[_index].data);
+            //Console.WriteLine("Index: {0}, Index in List: {1}", _index, chaind[_index].index);
+            //Console.WriteLine("Previous Hash: {0}, Current Hash: {1}", _prev_hash, last_block.hash);
+            //Console.WriteLine("Data: {0}, Data in List: {1}", _data, chaind[_index].data);
             
         }
     }
@@ -93,7 +95,7 @@ namespace Blockchain
             blockchain.add_block(blockchain.chaind[1].hash, 2, "Third transaction");
             for (int i = 0; i < blockchain.chaind.Count; i++)
             {
-                Console.WriteLine("Index: {0}, Prev_Hash: {1}, Hash: {0}", blockchain.chaind[i].index, blockchain.chaind[i].prev_hash, blockchain.chaind[i].hash);
+                Console.WriteLine("Index: {0}, Prev_Hash: {1}, Hash: {2}", blockchain.chaind[i].index, blockchain.chaind[i].prev_hash, blockchain.chaind[i].hash);
             }
         }
     }
