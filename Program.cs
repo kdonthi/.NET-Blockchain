@@ -9,10 +9,10 @@ namespace Blockchain
 {
     public class Block
     {
-        String              hash;
+        public String       hash;
         public String       prev_hash;
         public int          index;
-        DateTime            timestamp;
+        public DateTime     timestamp;
         public String       data;
         public Block        nextBlock;
         HashAlgorithm sha = SHA256.Create();
@@ -61,13 +61,13 @@ namespace Blockchain
 
     class Chain
     {
-        static List<Block> chain = new List<Block>();
+        public List<Block> chaind = new List<Block>();
         static Block last_block;
-        public void init_chain()
+        public void init_chain(String data)
         {
             Block head = new Block();
-            head.init(null, 0, "First block.");
-            chain.Add(head);
+            head.init(null, 0, data);
+            chaind.Add(head);
             last_block = head;
         }
         public void add_block(String _prev_hash, int _index, String _data)
@@ -77,6 +77,10 @@ namespace Blockchain
             last_block.nextBlock.index = _index;
             last_block.nextBlock.data = _data;
             last_block = last_block.nextBlock;
+            chaind.Add(last_block);
+            Console.WriteLine("Index: {0}, Index in List: {1}", _index, chaind[_index].index);
+            Console.WriteLine("Data: {0}, Data in List: {1}", _data, chaind[_index].data);
+            
         }
     }
 
@@ -84,10 +88,14 @@ namespace Blockchain
     {
         static void Main(string[] args)
         {
-            HashAlgorithm hash = SHA256.Create();
-            String input = "Hello";
-            byte[] hash_bytes = hash.ComputeHash(Encoding.ASCII.GetBytes(input));
-            Console.WriteLine("Input: {0}, SHA-256 Representation: {1}", input, Block.byte_array_to_string(hash_bytes));
+            Chain blockchain = new Chain();
+            blockchain.init_chain("First transaction");
+            blockchain.add_block(blockchain.chaind[0].hash, 1, "Second transaction");
+            blockchain.add_block(blockchain.chaind[1].hash, 2, "Third transaction");
+            for (int i = 0; i < blockchain.chaind.Count; i++)
+            {
+                Console.WriteLine(blockchain.chaind[i].index);
+            }
         }
     }
 }
