@@ -1,5 +1,4 @@
-﻿/*
-using System;
+﻿using System;
 using System.Security.Cryptography;
 using static System.Security.Cryptography.SHA256; //what does "using static" mean?
 using System.Text;
@@ -11,7 +10,7 @@ namespace Blockchain2
     public class Block
     {
         public String               hash;
-        public String               nonce;
+        public int                  nonce;
         //public String               intermediateNonce;
         public String               hash_input;
         public int                  hash_len;
@@ -41,36 +40,28 @@ namespace Blockchain2
             leftBlock = null;
             rightBlock = null;
             hash_input = $"Block at {index} index. Prev_hash: {prev_hash ?? ""} Data: {data}";
-            hash = byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes(hash_input)));
+            hash = byte_array_to_b16string(sha.ComputeHash(Encoding.ASCII.GetBytes(hash_input)));
             hash_len = hash.Length;
-            nonce = "";
+            //nonce = 0;
             //Console.WriteLine("Original Hash: {0}", hash);
             if (ft_strcmp(hash.Substring(hash_len - difficulty), stringOfZeros) == 1)
             {
-                for (int i = 0; i < 100; i++) //change this so that nonce is a number added to end
+                for (nonce = 1000; nonce < 2000; nonce++) //change this so that nonce is a number added to end
                 {
-                    //Console.WriteLine("Here!");
-                    for (int j = -1; j < 128; j++)
+                    hash_input = $"Block at {index} index. Prev_hash: {prev_hash ?? ""} Data: {data} Nonce: {nonce}";
+                    hash = byte_array_to_b16string(sha.ComputeHash(Encoding.ASCII.GetBytes(hash_input)));
+                    //Console.WriteLine("Hash: {0}, Nonce: {1}, i: {2}, j: {3}", hash, nonce, i, j);
+                    hash_len = hash.Length;
+                    //Console.WriteLine()
+                    if (nonce == 766)
                     {
-                        if (j == -1)
-                        {
-                            nonce = "" + (char) i;
-
-                        }
-                        else
-                        {
-                            nonce = "" + (char) i + (char) j;
-                        }
-                        hash = byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes(hash_input + nonce)));
-                        //Console.WriteLine("Hash: {0}, Nonce: {1}, i: {2}, j: {3}", hash, nonce, i, j);
-                        
-                        hash_len = hash.Length;
-                        //Console.WriteLine()
-                        if (ft_strcmp(hash.Substring(hash_len - difficulty), stringOfZeros) == 0)
-                        {
-                            Console.WriteLine("Here 2");
-                            return;
-                        }
+                        Console.WriteLine(hash.Substring(hash_len - difficulty));
+                        Console.WriteLine(stringOfZeros);
+                    }
+                    if (ft_strcmp(hash.Substring(hash_len - difficulty), stringOfZeros) == 0)
+                    {
+                        Console.WriteLine("Here 2");
+                        return;
                     }
                 }
             }
@@ -117,7 +108,7 @@ namespace Blockchain2
             }
             return (base_16);
         }
-        public static String byte_array_to_string(byte[] hash)
+        public static String byte_array_to_b16string(byte[] hash)
         {
             String newString = "";
             foreach (byte b in hash)
@@ -165,7 +156,7 @@ namespace Blockchain2
     {
         static void Main(string[] args)
         {
-            int difficulty = 1; //how many zeros we want at end of hash
+            int difficulty = 2; //how many zeros we want at end of hash
             int threads = 3;
             Chain blockchain = new Chain();
             blockchain.init_chain("First transaction!", difficulty);
@@ -175,9 +166,8 @@ namespace Blockchain2
             {
                 Console.WriteLine("Index: {0}, Prev_Hash: {1}, Hash: {2}", blockchain.chaind[i].index, blockchain.chaind[i].prev_hash, blockchain.chaind[i].hash);
             }
-            Console.WriteLine("{0},{1},{2}", Block.ft_strcmp("00", "abcd00".Substring(3)), Block.ft_strcmp("ab", "a"), Block.ft_strcmp("ababa", "ababab"));
+            Console.WriteLine("{0},{1},{2}", Block.ft_strcmp("00", "abcd00".Substring("abcd00".Length - 2)), Block.ft_strcmp("ab", "a"), Block.ft_strcmp("ababa", "ababab"));
             Console.WriteLine("Yolololo");
         }
     }
 }
-*/

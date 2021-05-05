@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Security.Cryptography;
 using static System.Security.Cryptography.SHA256; //what does "using static" mean?
 using System.Text;
@@ -167,3 +168,4 @@ namespace Blockchain
         }
     }
 }
+*/
