@@ -9,17 +9,17 @@ namespace Blockchain
 {
     public class Block
     {
-        public String               hash;
-        public String               nonce;
+        public String hash;
+        public String nonce;
         //public String               intermediateNonce;
-        public String               hash_input;
-        public int                  hash_len;
-        public String               prev_hash;
-        public int                  index;
-        public DateTime             timestamp;
-        public String               data;
-        public Block                nextBlock;
-        static public String        stringOfZeros;
+        public String hash_input;
+        public int hash_len;
+        public String prev_hash;
+        public int index;
+        public DateTime timestamp;
+        public String data;
+        public Block nextBlock;
+        static public String stringOfZeros;
         HashAlgorithm sha = SHA256.Create();
 
         public void init(String _prev_hash, int _index, String _data, int difficulty)
@@ -49,16 +49,16 @@ namespace Blockchain
                     {
                         if (j == -1)
                         {
-                            nonce = "" + (char) i;
+                            nonce = "" + (char)i;
 
                         }
                         else
                         {
-                            nonce = "" + (char) i + (char) j;
+                            nonce = "" + (char)i + (char)j;
                         }
                         hash = byte_array_to_string(sha.ComputeHash(Encoding.ASCII.GetBytes(hash_input + nonce)));
                         //Console.WriteLine("Hash: {0}, Nonce: {1}, i: {2}, j: {3}", hash, nonce, i, j);
-                        
+
                         hash_len = hash.Length;
                         //Console.WriteLine()
                         if (ft_strcmp(hash.Substring(hash_len - difficulty), stringOfZeros) == 0)
@@ -89,7 +89,7 @@ namespace Blockchain
                 return (0);
             else
                 return (1);
-            
+
         }
         public static String base_10_to_16(byte base10)
         {
@@ -130,7 +130,7 @@ namespace Blockchain
         static Block last_block;
         public void init_chain(String data, int _difficulty)
         {
-            difficulty = _difficulty; 
+            difficulty = _difficulty;
             Block head = new Block();
             head.init(null, 0, data, difficulty);
             chaind.Add(head);
@@ -145,7 +145,7 @@ namespace Blockchain
             //Console.WriteLine("Index: {0}, Index in List: {1}", _index, chaind[_index].index);
             //Console.WriteLine("Previous Hash: {0}, Current Hash: {1}", _prev_hash, last_block.hash);
             //Console.WriteLine("Data: {0}, Data in List: {1}", _data, chaind[_index].data);
-            
+
         }
     }
 
